@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95e66c6366d904e98bc83428217d4fd7, type: 3}
+  m_Name: Configuration.Main.InitialGameDataValues
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"graph":{"variables":{"Kind":"Flow","collection":{"$content":[],"$version":"A"},"$version":"A"},"controlInputDefinitions":[],"controlOutputDefinitions":[],"valueInputDefinitions":[],"valueOutputDefinitions":[{"_type":"System.Int32","key":"CurrentScore","label":null,"summary":null,"hideLabel":false},{"_type":"System.Boolean","key":"IsPaused","label":null,"summary":null,"hideLabel":false},{"_type":"System.Single","key":"WorldSpeed","label":null,"summary":null,"hideLabel":false}],"title":null,"summary":null,"pan":{"x":0.0,"y":-15.0},"zoom":1.0,"elements":[{"type":"System.Int32","value":{"$content":0,"$type":"System.Int32"},"defaultValues":{},"position":{"x":-339.0,"y":-228.0},"guid":"a7cee54a-5fcb-47c4-9d64-4d9b8b5ef982","$version":"A","$type":"Unity.VisualScripting.Literal","$id":"12"},{"type":"System.Boolean","value":{"$content":false,"$type":"System.Boolean"},"defaultValues":{},"position":{"x":-351.0,"y":-58.0},"guid":"61f1b4af-aac2-44f0-a121-5fc38932bf64","$version":"A","$type":"Unity.VisualScripting.Literal","$id":"14"},{"type":"System.Single","value":{"$content":0.0,"$type":"System.Single"},"defaultValues":{},"position":{"x":-304.0,"y":88.0},"guid":"0dc26ca3-6e8f-4516-a5ae-a9f17f9f074f","$version":"A","$type":"Unity.VisualScripting.Literal","$id":"16"},{"defaultValues":{},"position":{"x":-55.0,"y":-143.0},"guid":"8b221b38-116d-4719-99bd-c11c21ecee8f","$version":"A","$type":"Unity.VisualScripting.GraphOutput","$id":"18"},{"sourceUnit":{"$ref":"12"},"sourceKey":"output","destinationUnit":{"$ref":"18"},"destinationKey":"CurrentScore","guid":"d599582c-a410-415b-8129-f5699e1cfb4b","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"14"},"sourceKey":"output","destinationUnit":{"$ref":"18"},"destinationKey":"IsPaused","guid":"773c46dd-e5de-4d23-85cb-09dd7c4b7ad1","$type":"Unity.VisualScripting.ValueConnection"},{"sourceUnit":{"$ref":"16"},"sourceKey":"output","destinationUnit":{"$ref":"18"},"destinationKey":"WorldSpeed","guid":"361fbf90-9650-4752-9c40-6d8d7960ad74","$type":"Unity.VisualScripting.ValueConnection"}],"$version":"A"}}'
+    _objectReferences: []
