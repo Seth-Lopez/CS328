@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - HealthBar
+  - EnergyBar
   layers:
   - Default
   - TransparentFX
@@ -40,6 +42,12 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Walkable
+    uniqueID: 1675334493
+    locked: 0
+  - name: Assets
+    uniqueID: 3484710057
     locked: 0
   - name: Weapons
     uniqueID: 2783416311
