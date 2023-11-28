@@ -711,11 +711,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &220926301 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2402750437176271654, guid: f8032de67d8e53341a453eb3c4a1561f, type: 3}
-  m_PrefabInstance: {fileID: 8787330693567019494}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &246273520
 GameObject:
   m_ObjectHideFlags: 0
@@ -18944,22 +18939,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4334161160903195447, guid: f8032de67d8e53341a453eb3c4a1561f, type: 3}
   m_PrefabInstance: {fileID: 8787330693567019494}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2025413860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 220926301}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 440efeed78ffbaa42a040ac51c264bd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkingSpeed: 5
-  sprintSpeed: 10
-  currentHealth: 100
-  currentEnergy: 50
 --- !u!1 &2038681259
 GameObject:
   m_ObjectHideFlags: 0
@@ -19536,10 +19515,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2402750437176271654, guid: f8032de67d8e53341a453eb3c4a1561f, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2025413860}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f8032de67d8e53341a453eb3c4a1561f, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

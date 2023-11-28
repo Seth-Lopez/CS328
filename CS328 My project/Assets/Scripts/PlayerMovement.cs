@@ -30,10 +30,12 @@ public class PlayerScript : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         //Get Health Bar Component:
         healthBarGameObject = GameObject.FindWithTag("HealthBar");
-        healthBar = healthBarGameObject.GetComponent<Image>();
+        if(healthBarGameObject != null)
+            healthBar = healthBarGameObject.GetComponent<Image>();
         //Get Energy Bar Component:
         energyBarGameObject = GameObject.FindWithTag("EnergyBar");
-        energyBar = energyBarGameObject.GetComponent<Image>();
+        if(energyBarGameObject != null)
+            energyBar = energyBarGameObject.GetComponent<Image>();
         //Set Variables:
         currentMovementSpeed = walkingSpeed;
         currentHealth =  maxHealth;
@@ -75,7 +77,10 @@ public class PlayerScript : MonoBehaviour
     }
     private void updatingHealthAndEnergy()
     {
-        healthBar.fillAmount = Mathf.Clamp(currentHealth / maxHealth, 0, 100);
-        energyBar.fillAmount = Mathf.Clamp(currentEnergy / maxEnergy, 0, 50);
+        if(healthBar != null && energyBar != null)
+        {
+            healthBar.fillAmount = Mathf.Clamp(currentHealth / maxHealth, 0, 100);
+            energyBar.fillAmount = Mathf.Clamp(currentEnergy / maxEnergy, 0, 50);
+        }
     }
 }
