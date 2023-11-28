@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/*
 public class PowerUp : MonoBehaviour
 {// I know there is a r missing
     public PowerUpEffect powerUpEffect;
@@ -13,3 +13,4 @@ public class PowerUp : MonoBehaviour
         powerUpEffect.Apply(collision.gameObject);
     }
 }
+*/

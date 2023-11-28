@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2959116436412786159}
   - component: {fileID: 363101307459377506}
   - component: {fileID: 1009805692019263711}
-  - component: {fileID: 8561190820034163075}
+  - component: {fileID: 2698820499705730857}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -159,7 +159,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &8561190820034163075
+--- !u!114 &2698820499705730857
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -172,6 +172,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   walkingSpeed: 5
-  sprintSpeed: 0
+  sprintSpeed: 10
   currentHealth: 100
   currentEnergy: 50

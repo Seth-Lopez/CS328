@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 // this is just for organization purposes for the types of powerups //
+/*
 [CreateAssetMenu(menuName = "Powerups/HealthBuff" )]
 public class HealthBuff : PowerUpEffect
 {
@@ -13,4 +14,4 @@ public class HealthBuff : PowerUpEffect
     target.GetComponent<Health>().health.value += amount;
    }
 }
-
+*/
