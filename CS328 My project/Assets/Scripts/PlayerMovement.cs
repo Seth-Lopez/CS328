@@ -23,6 +23,10 @@ public class PlayerScript : MonoBehaviour
     private Image energyBar;
     [SerializeField] private float currentEnergy = 50;
     private float maxEnergy = 50;
+    // For Combat
+    [SerializeField] private GameObject projPrefab;
+    [SerializeField] private Transform launchOffset;
+    [SerializeField] private int spellSelected;
 
     private void Start()
     {
@@ -46,6 +50,7 @@ public class PlayerScript : MonoBehaviour
     {
         updatingMovement();
         updatingHealthAndEnergy();
+        updatingProjectile();
     }
     private void FixedUpdate()
     {
@@ -83,4 +88,12 @@ public class PlayerScript : MonoBehaviour
             energyBar.fillAmount = Mathf.Clamp(currentEnergy / maxEnergy, 0, 50);
         }
     }
+    private void updatingProjectile()
+    {
+        if(Input.GetButtonDown("Fire1"))
+        {
+            Instantiate(projPrefab, launchOffset.position, transform.rotation);
+        }
+    }
+    public int getSpellSelected(){return spellSelected;}
 }

@@ -89,7 +89,7 @@ public class EnemyBehavior : MonoBehaviour
                 {*/
                     agent.speed = sprintSpeed;
                     if(!walkPointSet) searchForDest();
-                    if(walkPointSet) {agent.SetDestination(destPoint);  Debug.Log("Here"); Debug.Log("Dest: " + destPoint);}
+                    if(walkPointSet) {agent.SetDestination(destPoint); }// Debug.Log("Here"); Debug.Log("Dest: " + destPoint);}
                     if(Vector3.Distance(transform.position, destPoint) < 10f)
                     {
                         walkPointSet = false;
