@@ -6,6 +6,8 @@ TagManager:
   tags:
   - HealthBar
   - EnergyBar
+  - Enemy
+  - Bullet
   layers:
   - Default
   - TransparentFX

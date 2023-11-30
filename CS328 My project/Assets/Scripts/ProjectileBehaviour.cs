@@ -15,6 +15,7 @@ public class ProjectileBehaviour : MonoBehaviour
     [SerializeField] private Sprite[] images;
     private SpriteRenderer projSprite;
     [SerializeField] private PlayerScript plyrMov;
+    private float damage = 20f;
 
     void Start()
     {
@@ -52,6 +53,8 @@ public class ProjectileBehaviour : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         Debug.Log("Object is colliding with: " + other.gameObject.name);
+        GameObject target = other.gameObject;
+        target.GetComponent<EnemyBehavior>().setHealth(damage);
         Destroy(gameObject);
     }
 }
