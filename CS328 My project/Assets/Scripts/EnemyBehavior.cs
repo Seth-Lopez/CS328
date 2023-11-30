@@ -34,10 +34,17 @@ public class EnemyBehavior : MonoBehaviour
     private Image energyBar;
     [SerializeField] private float currentEnergy = 50;
     private float maxEnergy = 50;
-    //Line Of Sight
+    // Line Of Sight
     private GameObject player;
     private bool hasLOS = false;
     [SerializeField] private float LOSDist = 3f;
+    // For Combat
+    [SerializeField] private GameObject projPrefab;
+    //[SerializeField] private Transform launchOffset;
+    private float bulletFiringSpeed = 3;
+    private float crntBulFireSpd;
+    [SerializeField] private GameObject launchOffset;
+
     private void Start()
     {
         //Set RigidBody:
@@ -56,7 +63,8 @@ public class EnemyBehavior : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
-        //Line Of Sight
+        //Set Bullet Speed
+        crntBulFireSpd = bulletFiringSpeed;
     }
 
     private void Update()
@@ -75,9 +83,12 @@ public class EnemyBehavior : MonoBehaviour
         {
             agent.speed = sprintSpeed;
             agent.SetDestination(target.position);
+            // Start Shooting
+            initiateCombat();// else bulletFiringSpeed = 3;
         }
         else
         {
+            bulletFiringSpeed = 3;
             timer += Time.deltaTime;
             if(timer >= waitToMove)
             {
@@ -93,7 +104,6 @@ public class EnemyBehavior : MonoBehaviour
         } 
         
     }
-    // Updating Movement Speed: 
     public void setWalkingSpeed(float newWalkingSpeed) { walkingSpeed = newWalkingSpeed; }
     public void setSprintSpeed(float newSprintSpeed) { sprintSpeed = newSprintSpeed; }
     public void setLineOfSightDistance(float newLOSDist) { LOSDist = newLOSDist; }
@@ -115,6 +125,24 @@ public class EnemyBehavior : MonoBehaviour
         float y = UnityEngine.Random.Range(-rangePos, rangePos);
         destPoint = new Vector3(transform.position.x + x, transform.position.y + y, 0f);
         walkPointSet = true;
+    }
+    private void initiateCombat()
+    {
+        float maxDistance = 1f;
+        // Calculate direction from enemy to player
+        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+
+        // Keep the LaunchOffset within a maximum distance from the enemy
+        Vector3 desiredPosition = transform.position + directionToPlayer * maxDistance;
+        launchOffset.transform.position = Vector3.MoveTowards(launchOffset.transform.position, desiredPosition, Time.deltaTime * maxDistance * 2f);
+
+        // Rotate the LaunchOffset to face the player
+        Quaternion targetRotation = Quaternion.LookRotation(Vector3.forward, directionToPlayer);
+        launchOffset.transform.rotation = Quaternion.Slerp(launchOffset.transform.rotation, targetRotation, Time.deltaTime * 10f);
+        
+        if(crntBulFireSpd == bulletFiringSpeed) Instantiate(projPrefab, launchOffset.transform.position, Quaternion.identity);
+        crntBulFireSpd -= Time.deltaTime;
+        if(crntBulFireSpd <= 0) crntBulFireSpd = bulletFiringSpeed;
     }
     // Recursively set the opacity to 0 for the specified Transform and its children
     void SetOpacityToZeroRecursive(Transform parent)

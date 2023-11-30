@@ -92,7 +92,8 @@ public class PlayerScript : MonoBehaviour
     {
         if(Input.GetButtonDown("Fire1"))
         {
-            Instantiate(projPrefab, launchOffset.position, transform.rotation);
+            GameObject instantiatedObject = Instantiate(projPrefab, launchOffset.position, transform.rotation);
+            instantiatedObject.GetComponent<ProjectileBehaviour>().setIsPlayer();
         }
     }
     public int getSpellSelected(){return spellSelected;}
