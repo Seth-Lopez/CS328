@@ -52,6 +52,7 @@ public class EnemyBehavior : MonoBehaviour
     private bool turnback = false;
     private GameObject hand; 
     private float bossTimer = 5f;
+    private int teleport = 1;
     private void Start()
     {
         //Set RigidBody:
@@ -81,8 +82,7 @@ public class EnemyBehavior : MonoBehaviour
     {
         updatingHealthAndEnergy();
         updatingMovement();
-        if(hand != null && launchOffset != null)
-            Debug.Log("isactive?");
+        if(gameObject.name == "Enemy - BOSS")
             updatingMode();
     }
     private void FixedUpdate()
@@ -96,7 +96,6 @@ public class EnemyBehavior : MonoBehaviour
         if(bossTimer <= 0) bossTimer = 5f;
         if(bossTimer == 5f)
         {
-            Debug.Log("NOT HERE?");
             if(weaponType == 0)
             {
                 launchOffset.SetActive(false);
@@ -111,6 +110,11 @@ public class EnemyBehavior : MonoBehaviour
             }
         }
         bossTimer -= Time.deltaTime;
+        if(currentHealth <= 50 && teleport == 1)
+        {
+            GameObject teleporterPos = GameObject.FindWithTag("Teleport");
+            transform.position = teleporterPos.transform.position;
+        }
     }
     private void updatingMovement() 
     { 

@@ -140,7 +140,7 @@ public class PlayerScript : MonoBehaviour
         {
             tempPowerUp -= Time.deltaTime;
         }
-        else if(tempPowerUp <= 0)
+        if(tempPowerUp <= 0)
         {
             tempPowerUp = 5f;
             spellSelected = 2;
