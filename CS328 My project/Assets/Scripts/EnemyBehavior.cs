@@ -51,6 +51,7 @@ public class EnemyBehavior : MonoBehaviour
     private float handRotation = 0;
     private bool turnback = false;
     private GameObject hand; 
+    private float bossTimer = 5f;
     private void Start()
     {
         //Set RigidBody:
@@ -73,18 +74,43 @@ public class EnemyBehavior : MonoBehaviour
         //Set Bullet Speed
         crntBulFireSpd = bulletFiringSpeed;
         //Set Hand
-        if(weaponType == 1) hand = transform.Find("WeaponOnHand").gameObject;
+        hand = transform.Find("WeaponOnHand").gameObject;
     }
 
     private void Update()
     {
         updatingHealthAndEnergy();
         updatingMovement();
+        if(hand != null && launchOffset != null)
+            Debug.Log("isactive?");
+            updatingMode();
     }
     private void FixedUpdate()
     {
         
         lineOfSight();
+    }
+    private void updatingMode()
+    {
+        //Debug.Log(bossTimer);
+        if(bossTimer <= 0) bossTimer = 5f;
+        if(bossTimer == 5f)
+        {
+            Debug.Log("NOT HERE?");
+            if(weaponType == 0)
+            {
+                launchOffset.SetActive(false);
+                hand.SetActive(true);
+                weaponType = 1;
+            }
+            else if(weaponType == 1)
+            {
+                hand.SetActive(false);
+                launchOffset.SetActive(true);
+                weaponType = 0;
+            }
+        }
+        bossTimer -= Time.deltaTime;
     }
     private void updatingMovement() 
     { 
