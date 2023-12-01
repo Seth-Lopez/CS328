@@ -63,6 +63,7 @@ public class PlayerScript : MonoBehaviour
     // Updating Movement Speed: 
     public void setWalkingSpeed(float newWalkingSpeed){walkingSpeed = newWalkingSpeed;}
     public void setSprintSpeed(float newSprintSpeed){sprintSpeed = newSprintSpeed;}
+    public float getCurrentSpeed(){return currentMovementSpeed;}
     private void updatingMovement()
     {
         movementDirection = new UnityEngine.Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -81,6 +82,11 @@ public class PlayerScript : MonoBehaviour
             currentEnergy += 10*Time.deltaTime;
         }
         currentEnergy = Mathf.Clamp(currentEnergy, 0, maxEnergy);
+        
+        if(movementDirection != null)
+        {
+            if(movementDirection.x == 0 && movementDirection.y == 0) currentMovementSpeed = 0;
+        }
     }
     private void updatingFacingDirection()
     {
@@ -98,16 +104,25 @@ public class PlayerScript : MonoBehaviour
                 transform.rotation = UnityEngine.Quaternion.Euler(0f, 0f, 0f);
             }
         }
-        UnityEngine.Vector2 dir = new UnityEngine.Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        if(dir.x > 0) transform.rotation = UnityEngine.Quaternion.Euler(0f, 0f, 0f);
-        if(dir.x < 0) transform.rotation = UnityEngine.Quaternion.Euler(0f, 180f, 0f);
+        else
+        {
+            UnityEngine.Vector2 dir = new UnityEngine.Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            if(dir.x > 0) transform.rotation = UnityEngine.Quaternion.Euler(0f, 0f, 0f);
+            if(dir.x < 0) transform.rotation = UnityEngine.Quaternion.Euler(0f, 180f, 0f);
+        }
+        
     }
+    public void setHealth(float damageTaken){currentHealth -= damageTaken;}
     private void updatingHealthAndEnergy()
     {
         if(healthBar != null && energyBar != null)
         {
             healthBar.fillAmount = Mathf.Clamp(currentHealth / maxHealth, 0, 100);
             energyBar.fillAmount = Mathf.Clamp(currentEnergy / maxEnergy, 0, 50);
+        }
+        if(currentHealth <= 0)
+        {
+            Destroy(gameObject);
         }
     }
     private void updatingProjectile()

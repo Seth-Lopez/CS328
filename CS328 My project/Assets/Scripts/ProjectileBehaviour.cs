@@ -27,6 +27,7 @@ public class ProjectileBehaviour : MonoBehaviour
         projSprite = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        player = GameObject.FindGameObjectWithTag("Player");
         if(isPlayer == true)
         {
             setProjectile(plyrMov.getSpellSelected());
@@ -36,12 +37,11 @@ public class ProjectileBehaviour : MonoBehaviour
             Vector3 direction = (mousePosition - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            rb.velocity = direction * speed;
+            rb.velocity = direction * (speed + player.GetComponent<PlayerScript>().getCurrentSpeed()/10);
         }
         else
         {
             setProjectile(0);
-            player = GameObject.FindGameObjectWithTag("Player");
             Vector3 direction = player.transform.position - transform.position;
             rb.velocity = new Vector2(direction.x, direction.y).normalized * speed;
             float rot = Mathf.Atan2(-direction.y, -direction.x) * Mathf.Rad2Deg;
@@ -86,11 +86,23 @@ public class ProjectileBehaviour : MonoBehaviour
     void OnCollisionEnter2D(Collision2D other)
     {
         Debug.Log("Object is colliding with: " + other.gameObject.name);
-        if(other.gameObject.name == "Enemy" || other.gameObject.name == "Enemy - Melee")
+        if(other.gameObject.name == "Player" && gameObject.name.Substring(0, Mathf.Min(5, other.gameObject.name.Length)) == "Proje") 
         {
             GameObject target = other.gameObject;
-            target.GetComponent<EnemyBehavior>().setHealth(damage);
+            if(target != null)
+                target.GetComponent<PlayerScript>().setHealth(damage);
+            Destroy(gameObject);
         }
-        Destroy(gameObject);
+        else if(other.gameObject.name.Substring(0, Mathf.Min(5, other.gameObject.name.Length)) == "Enemy")
+        {
+            GameObject target = other.gameObject;
+            if(target != null)
+                target.GetComponent<EnemyBehavior>().setHealth(damage);
+            Destroy(gameObject);
+        }
+        else if(other.gameObject.name != "Player")
+        {
+            Destroy(gameObject);
+        }
     }
 }
