@@ -4,13 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Animations;
 using Unity.Mathematics;
+using System.Numerics;
 public class PlayerScript : MonoBehaviour
 {
     // For Movement: 
     [SerializeField] private float walkingSpeed = 5f;
     [SerializeField] private float sprintSpeed;
     private float currentMovementSpeed;
-    private Vector2 movementDirection;
+    private UnityEngine.Vector2 movementDirection;
+    private GameObject vCamera;
     // RigidBody 2D:
     private Rigidbody2D rb;
     // For Health:
@@ -50,7 +52,8 @@ public class PlayerScript : MonoBehaviour
     {
         updatingMovement();
         updatingHealthAndEnergy();
-        updatingProjectile();
+        updatingFacingDirection();
+        updatingProjectile();  
     }
     private void FixedUpdate()
     {
@@ -62,8 +65,7 @@ public class PlayerScript : MonoBehaviour
     public void setSprintSpeed(float newSprintSpeed){sprintSpeed = newSprintSpeed;}
     private void updatingMovement()
     {
-        
-        movementDirection = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        movementDirection = new UnityEngine.Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         sprintSpeed = walkingSpeed + 5f;
         if (Input.GetKey(KeyCode.LeftShift))
         {
@@ -79,6 +81,26 @@ public class PlayerScript : MonoBehaviour
             currentEnergy += 10*Time.deltaTime;
         }
         currentEnergy = Mathf.Clamp(currentEnergy, 0, maxEnergy);
+    }
+    private void updatingFacingDirection()
+    {
+        vCamera = GameObject.FindWithTag("Camera");
+        UnityEngine.Vector3 mousePosition = vCamera.GetComponent<Camera>().ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0f;
+        if(Input.GetButtonDown("Fire1"))
+        {
+            if(transform.position.x > mousePosition.x)
+            {
+                transform.rotation = UnityEngine.Quaternion.Euler(0f, 180f, 0f);
+            }
+            else
+            {
+                transform.rotation = UnityEngine.Quaternion.Euler(0f, 0f, 0f);
+            }
+        }
+        UnityEngine.Vector2 dir = new UnityEngine.Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        if(dir.x > 0) transform.rotation = UnityEngine.Quaternion.Euler(0f, 0f, 0f);
+        if(dir.x < 0) transform.rotation = UnityEngine.Quaternion.Euler(0f, 180f, 0f);
     }
     private void updatingHealthAndEnergy()
     {

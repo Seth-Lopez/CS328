@@ -10,6 +10,8 @@ using UnityEngine.AI;
 using System.Data;
 using System.Runtime.CompilerServices;
 using UnityEditor;
+using System.Runtime.ExceptionServices;
+using System;
 public class EnemyBehavior : MonoBehaviour
 {
     // For Movement: 
@@ -17,9 +19,11 @@ public class EnemyBehavior : MonoBehaviour
     private float sprintSpeed = 3f;
     private bool walkPointSet = false;
     private Vector3 destPoint;
+    private Vector3 previousPosition;
     [SerializeField] private float rangePos = 3f;
     [SerializeField] private float waitToMove = 5f;
     [SerializeField] private float timer = 0f;
+    private float rotSpeed = .1f;
     //NavMesh:
     [SerializeField] LayerMask groundLayer;
     [SerializeField] Transform target;
@@ -37,14 +41,16 @@ public class EnemyBehavior : MonoBehaviour
     // Line Of Sight
     private GameObject player;
     private bool hasLOS = false;
-    [SerializeField] private float LOSDist = 3f;
+    [SerializeField] private float LOSDist;
     // For Combat
     [SerializeField] private GameObject projPrefab;
-    //[SerializeField] private Transform launchOffset;
     private float bulletFiringSpeed = 3;
     private float crntBulFireSpd;
     [SerializeField] private GameObject launchOffset;
-
+    [SerializeField] private int weaponType;
+    private float handRotation = 0;
+    private bool turnback = false;
+    private GameObject hand; 
     private void Start()
     {
         //Set RigidBody:
@@ -59,12 +65,15 @@ public class EnemyBehavior : MonoBehaviour
         //Set Variables:
         currentHealth = maxHealth;
         currentEnergy = maxEnergy;
+        previousPosition = transform.position;
         //Set NavMesh
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         //Set Bullet Speed
         crntBulFireSpd = bulletFiringSpeed;
+        //Set Hand
+        if(weaponType == 1) hand = transform.Find("WeaponOnHand").gameObject;
     }
 
     private void Update()
@@ -79,12 +88,30 @@ public class EnemyBehavior : MonoBehaviour
     }
     private void updatingMovement() 
     { 
-        if(hasLOS && player.transform.position.x - transform.position.x <= LOSDist && player.transform.position.y - transform.position.y <= LOSDist)
+        Vector3 currentPosition = transform.position;
+        bool movingLeft;
+        bool movingRight;
+        float x = Mathf.Abs(player.transform.position.x - transform.position.x);
+        float y = Mathf.Abs(player.transform.position.y - transform.position.y);
+        if(hasLOS && x <= LOSDist && y <= LOSDist)
         {
             agent.speed = sprintSpeed;
-            agent.SetDestination(target.position);
+            if(weaponType == 0)
+            {
+                if(x >= 3 && y >=3)
+                    agent.SetDestination(target.position);
+            }
+            else if(weaponType == 1)
+                agent.SetDestination(target.position);
+                
+            movingLeft = player.transform.position.x < currentPosition.x;
+            movingRight = player.transform.position.x > currentPosition.x;
+            if(movingLeft) transform.rotation = Quaternion.Euler(0f, 0f, 0f); else if (!movingLeft && movingRight) transform.rotation = Quaternion.Euler(0f, 180f, 0f);
             // Start Shooting
-            initiateCombat();// else bulletFiringSpeed = 3;
+            if(weaponType == 0) 
+                initiateCombatProjectile();// else bulletFiringSpeed = 3;
+            else if(weaponType == 1)
+                if(movingLeft) initiateCombatMelee(movingLeft); else if (!movingLeft && movingRight) initiateCombatMelee(movingLeft);
         }
         else
         {
@@ -99,8 +126,19 @@ public class EnemyBehavior : MonoBehaviour
                 {
                     walkPointSet = false;
                     timer = 0;
-                }   
+                }
             }
+            if(handRotation != 0)
+                {
+                    handRotation += Time.deltaTime * 120;
+                    hand.transform.rotation = Quaternion.Euler(0f, 0f, -handRotation);
+                    handRotation = Mathf.Clamp(handRotation, -80, 0);
+                }
+            else turnback = false;
+            movingLeft = currentPosition.x < previousPosition.x;
+            movingRight = currentPosition.x > previousPosition.x;
+            previousPosition = currentPosition;
+            if(movingLeft) transform.rotation = Quaternion.Euler(0f, 0f, 0f); else if (!movingLeft && movingRight) transform.rotation = Quaternion.Euler(0f, 180f, 0f);
         } 
         
     }
@@ -126,7 +164,7 @@ public class EnemyBehavior : MonoBehaviour
         destPoint = new Vector3(transform.position.x + x, transform.position.y + y, 0f);
         walkPointSet = true;
     }
-    private void initiateCombat()
+    private void initiateCombatProjectile()
     {
         float maxDistance = 1f;
         // Calculate direction from enemy to player
@@ -143,6 +181,41 @@ public class EnemyBehavior : MonoBehaviour
         if(crntBulFireSpd == bulletFiringSpeed) Instantiate(projPrefab, launchOffset.transform.position, Quaternion.identity);
         crntBulFireSpd -= Time.deltaTime;
         if(crntBulFireSpd <= 0) crntBulFireSpd = bulletFiringSpeed;
+    }
+    private void initiateCombatMelee(bool left)
+    {
+        int rot = 1;
+        if(left) rot = 1; else rot = -1;
+        if(hand != null)
+        {
+            if(hasLOS)
+            {
+                if(handRotation != -80 && turnback == false)
+                {
+                    handRotation -= Time.deltaTime * 120;
+                    hand.transform.rotation = Quaternion.Euler(0f, 0f, -handRotation*rot);
+                    handRotation = Mathf.Clamp(handRotation, -80, 0);
+                }
+                else turnback = true;
+                if(handRotation != 0 && turnback == true)
+                {
+                    handRotation += Time.deltaTime * 120;
+                    hand.transform.rotation = Quaternion.Euler(0f, 0f, -handRotation*rot);
+                    handRotation = Mathf.Clamp(handRotation, -80, 0);
+                }
+                else turnback = false;
+            }
+            else
+            {
+                if(handRotation != 0)
+                {
+                    handRotation += Time.deltaTime * 120;
+                    hand.transform.rotation = Quaternion.Euler(0f, 0f, -handRotation*rot);
+                    handRotation = Mathf.Clamp(handRotation, -80, 0);
+                }
+                else turnback = false;
+            }
+        }
     }
     // Recursively set the opacity to 0 for the specified Transform and its children
     void SetOpacityToZeroRecursive(Transform parent)
