@@ -38,6 +38,9 @@ public class ProjectileBehaviour : MonoBehaviour
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             rb.velocity = direction * (speed + player.GetComponent<PlayerScript>().getCurrentSpeed()/10);
+            int ignoreplayer = 1 << LayerMask.NameToLayer("Player");
+            this.GetComponent<CircleCollider2D>().usedByEffector = true;
+            this.GetComponent<CircleCollider2D>().excludeLayers = ignoreplayer;
         }
         else
         {
@@ -71,6 +74,14 @@ public class ProjectileBehaviour : MonoBehaviour
     {
         projSprite.sprite = images[spell];
         animator.SetInteger("SpellVar", spell);
+        if(spell == 1)
+        {
+            damage = 40;
+        }
+        else
+        {
+            damage = 20;
+        }
     }
     public void setIsPlayer(){isPlayer = true;}
     private void OnTriggerEnter2D(Collider2D other)

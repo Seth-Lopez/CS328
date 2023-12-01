@@ -145,7 +145,7 @@ public class EnemyBehavior : MonoBehaviour
     public void setWalkingSpeed(float newWalkingSpeed) { walkingSpeed = newWalkingSpeed; }
     public void setSprintSpeed(float newSprintSpeed) { sprintSpeed = newSprintSpeed; }
     public void setLineOfSightDistance(float newLOSDist) { LOSDist = newLOSDist; }
-    public void setHealth(float damageTaken){currentHealth -= damageTaken;}
+    public void setHealth(float damageTaken){currentHealth -= damageTaken; if(currentHealth <= 0) player.GetComponent<PlayerScript>().setScoreVal(1);}
     private void updatingHealthAndEnergy()
     {
         if (healthBar != null) healthBar.fillAmount = Mathf.Clamp(currentHealth / maxHealth, 0, 100);

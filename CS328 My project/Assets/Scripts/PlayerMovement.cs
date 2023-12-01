@@ -29,7 +29,10 @@ public class PlayerScript : MonoBehaviour
     [SerializeField] private GameObject projPrefab;
     [SerializeField] private Transform launchOffset;
     [SerializeField] private int spellSelected;
-
+    private float tempPowerUp = 5f;
+    // For ScoreBoard
+    [SerializeField] private TMPro.TMP_Text scoreVal;
+    private int currentScore = 0;
     private void Start()
     {
         // Set RigidBody:
@@ -63,6 +66,7 @@ public class PlayerScript : MonoBehaviour
     // Updating Movement Speed: 
     public void setWalkingSpeed(float newWalkingSpeed){walkingSpeed = newWalkingSpeed;}
     public void setSprintSpeed(float newSprintSpeed){sprintSpeed = newSprintSpeed;}
+    public void setScoreVal(int newValue){ currentScore += newValue; scoreVal.text = "" + currentScore;}
     public float getCurrentSpeed(){return currentMovementSpeed;}
     private void updatingMovement()
     {
@@ -132,6 +136,16 @@ public class PlayerScript : MonoBehaviour
             GameObject instantiatedObject = Instantiate(projPrefab, launchOffset.position, transform.rotation);
             instantiatedObject.GetComponent<ProjectileBehaviour>().setIsPlayer();
         }
+        if(tempPowerUp != 5f)
+        {
+            tempPowerUp -= Time.deltaTime;
+        }
+        else if(tempPowerUp <= 0)
+        {
+            tempPowerUp = 5f;
+            spellSelected = 2;
+        }
     }
     public int getSpellSelected(){return spellSelected;}
+    public void SetSpellSelected(int newValue){spellSelected = newValue; tempPowerUp -= Time.deltaTime;}
 }
