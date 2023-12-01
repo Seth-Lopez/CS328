@@ -2,16 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Animations;
-using Unity.Mathematics;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine.AI;
-using System.Data;
-using System.Runtime.CompilerServices;
-using UnityEditor;
-using System.Runtime.ExceptionServices;
-using System;
 public class EnemyBehavior : MonoBehaviour
 {
     // For Movement: 
@@ -23,7 +14,6 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField] private float rangePos = 3f;
     [SerializeField] private float waitToMove = 5f;
     [SerializeField] private float timer = 0f;
-    private float rotSpeed = .1f;
     //NavMesh:
     [SerializeField] LayerMask groundLayer;
     [SerializeField] Transform target;

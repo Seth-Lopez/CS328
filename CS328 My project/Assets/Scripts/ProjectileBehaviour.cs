@@ -1,11 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Mathematics;
-using UnityEditor.Animations;
 using UnityEngine;
-using UnityEngine.UIElements;
-using Cinemachine;
 
 public class ProjectileBehaviour : MonoBehaviour
 {

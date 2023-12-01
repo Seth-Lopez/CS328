@@ -2,9 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Animations;
-using Unity.Mathematics;
-using System.Numerics;
+
 public class PlayerScript : MonoBehaviour
 {
     // For Movement: 
