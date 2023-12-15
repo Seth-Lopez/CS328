@@ -16,6 +16,8 @@ public class ProjectileBehaviour : MonoBehaviour
     private bool isPlayer = false;
     private GameObject player;
     private GameObject vCamera;
+    private Vector3 direction;
+    private bool isFireStart = false;
     void Start()
     {
         plyrMov = FindObjectOfType<PlayerScript>();
@@ -23,6 +25,13 @@ public class ProjectileBehaviour : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player");
+        if(!isFireStart)
+        {
+            normalStart();
+        }
+    }
+    void normalStart()
+    {
         if(isPlayer == true)
         {
             setProjectile(plyrMov.getSpellSelected());
@@ -40,7 +49,7 @@ public class ProjectileBehaviour : MonoBehaviour
         else
         {
             setProjectile(0);
-            Vector3 direction = player.transform.position - transform.position;
+            direction = player.transform.position - transform.position;
             rb.velocity = new Vector2(direction.x, direction.y).normalized * speed;
             float rot = Mathf.Atan2(-direction.y, -direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, rot + 180);
@@ -51,11 +60,13 @@ public class ProjectileBehaviour : MonoBehaviour
             int combinedLayerMask = ignoreRaycastLayer | extrasLayer;
             this.GetComponent<CircleCollider2D>().usedByEffector = true;
             this.GetComponent<CircleCollider2D>().excludeLayers = combinedLayerMask;
-            
         }
-        
-        
     }
+    void fireCircleStart()
+    {
+        transform.Translate(Vector3.right * speed * Time.deltaTime);
+    }
+    public void setIsFireStart(){isFireStart = true;}
     void Update()
     {
         timeTillDelete -= Time.deltaTime;
@@ -63,6 +74,7 @@ public class ProjectileBehaviour : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        if(isFireStart){fireCircleStart();}
     }
     public void setSpeed(float setSpeed){speed = setSpeed;}
     public void setProjectile(int spell)
@@ -79,31 +91,22 @@ public class ProjectileBehaviour : MonoBehaviour
         }
     }
     public void setIsPlayer(){isPlayer = true;}
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        Debug.Log("Object is Triggering with: " + other.gameObject.name);
-        if(other.gameObject.name == "Enemy")
-        {
-            GameObject target = other.gameObject;
-            target.GetComponent<EnemyBehavior>().setHealth(damage);
-        }
-        Destroy(gameObject);
-    }
+    
     void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log("Object is colliding with: " + other.gameObject.name);
+        //Debug.Log("Object is colliding with: " + other.gameObject.name);
         if(other.gameObject.name == "Player" && gameObject.name.Substring(0, Mathf.Min(5, other.gameObject.name.Length)) == "Proje") 
         {
-            GameObject target = other.gameObject;
-            if(target != null)
-                target.GetComponent<PlayerScript>().setHealth(damage);
+            other.gameObject.GetComponent<PlayerScript>().setHealth(damage);
             Destroy(gameObject);
         }
-        else if(other.gameObject.name.Substring(0, Mathf.Min(5, other.gameObject.name.Length)) == "Enemy")
+        else if(other.gameObject.name.Substring(0, Mathf.Min(7, other.gameObject.name.Length)) == "Enemy -")
         {
-            GameObject target = other.gameObject;
-            if(target != null)
-                target.GetComponent<EnemyBehavior>().setHealth(damage);
+            other.gameObject.GetComponent<EnemyBehavior>().setHealth(damage);
+        }
+        else if(other.gameObject.name.Substring(0, Mathf.Min(7, other.gameObject.name.Length)) == "EnemyV2")
+        {
+            other.gameObject.GetComponent<EnemyModes>().setHealth(damage);
             Destroy(gameObject);
         }
         else if(other.gameObject.name != "Player")

@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class TitleMgr : MonoBehaviour
@@ -56,14 +55,14 @@ public class TitleMgr : MonoBehaviour
     }
     public void level1()
     {
-        SceneManager.LoadScene("Dungeon_2");
+        SceneManager.LoadScene("Dungeon_01");
     }
     public void level2()
     {
-        SceneManager.LoadScene("Dungeon");
+        SceneManager.LoadScene("Dungeon_02");
     }
     public void level3()
     {
-        SceneManager.LoadScene("Dungeon");
+        SceneManager.LoadScene("Dungeon_02");
     }
 }

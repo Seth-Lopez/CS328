@@ -14,6 +14,7 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField] private float rangePos = 3f;
     [SerializeField] private float waitToMove = 5f;
     [SerializeField] private float timer = 0f;
+    private float sprinting = 0f;
     //NavMesh:
     [SerializeField] LayerMask groundLayer;
     [SerializeField] Transform target;
@@ -22,11 +23,11 @@ public class EnemyBehavior : MonoBehaviour
     private Rigidbody2D rb;
     // For Health:
     private Image healthBar;
-    [SerializeField] private float currentHealth = 100f;
-    private float maxHealth = 100;
+    private float currentHealth = 100f;
+    [SerializeField] private float maxHealth = 100;
     // For Energy:
     private Image energyBar;
-    [SerializeField] private float currentEnergy = 50;
+    [SerializeField] private float currentEnergy = 0;
     private float maxEnergy = 50;
     // Line Of Sight
     private GameObject player;
@@ -56,7 +57,7 @@ public class EnemyBehavior : MonoBehaviour
         //if(energyBarGameObject != null) energyBar = energyBarGameObject.GetComponent<Image>();
         //Set Variables:
         currentHealth = maxHealth;
-        currentEnergy = maxEnergy;
+        //currentEnergy = maxEnergy;
         previousPosition = transform.position;
         //Set NavMesh
         agent = GetComponent<NavMeshAgent>();
@@ -66,14 +67,29 @@ public class EnemyBehavior : MonoBehaviour
         crntBulFireSpd = bulletFiringSpeed;
         //Set Hand
         hand = transform.Find("WeaponOnHand").gameObject;
+        
     }
 
     private void Update()
     {
+        target = GameObject.FindGameObjectWithTag("Player").transform;
         updatingHealthAndEnergy();
         updatingMovement();
         if(gameObject.name == "Enemy - BOSS")
             updatingMode();
+        if(weaponType == -1 && sprinting >= 0 && sprinting <= 3)
+        {
+            agent.speed = sprintSpeed*3;
+        }
+        else if(weaponType == -1 && sprinting < 0)
+        {
+            sprinting = 6;
+        }
+        else if(weaponType == -1 && sprinting > 3)
+        {
+            agent.speed = sprintSpeed;
+        }
+        sprinting -= Time.deltaTime;
     }
     private void FixedUpdate()
     {
@@ -116,14 +132,19 @@ public class EnemyBehavior : MonoBehaviour
         if(hasLOS && x <= LOSDist && y <= LOSDist)
         {
             agent.speed = sprintSpeed;
-            if(weaponType == 0)
+            if(weaponType == 0 || weaponType == 2)
             {
-                if(x >= 3 && y >=3)
+                if(x >=3 && y >= 3)
+                {
                     agent.SetDestination(target.position);
+                }
             }
             else if(weaponType == 1)
                 agent.SetDestination(target.position);
-                
+            if(weaponType == -1)
+            {
+                agent.SetDestination(target.position);
+            }
             movingLeft = player.transform.position.x < currentPosition.x;
             movingRight = player.transform.position.x > currentPosition.x;
             if(movingLeft) transform.rotation = Quaternion.Euler(0f, 0f, 0f); else if (!movingLeft && movingRight) transform.rotation = Quaternion.Euler(0f, 180f, 0f);
@@ -159,8 +180,7 @@ public class EnemyBehavior : MonoBehaviour
             movingRight = currentPosition.x > previousPosition.x;
             previousPosition = currentPosition;
             if(movingLeft) transform.rotation = Quaternion.Euler(0f, 0f, 0f); else if (!movingLeft && movingRight) transform.rotation = Quaternion.Euler(0f, 180f, 0f);
-        } 
-        
+        }  
     }
     public void setWalkingSpeed(float newWalkingSpeed) { walkingSpeed = newWalkingSpeed; }
     public void setSprintSpeed(float newSprintSpeed) { sprintSpeed = newSprintSpeed; }

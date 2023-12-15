@@ -23,14 +23,17 @@ public class PlayerScript : MonoBehaviour
     private Image energyBar;
     [SerializeField] private float currentEnergy = 50;
     private float maxEnergy = 50;
+    private Image fireRate;
     // For Combat
     [SerializeField] private GameObject projPrefab;
     [SerializeField] private Transform launchOffset;
     [SerializeField] private int spellSelected;
+    private bool isSick = false;
     private float tempPowerUp = 5f;
     // For ScoreBoard
     [SerializeField] private TMPro.TMP_Text scoreVal;
     private int currentScore = 0;
+    private float delay = .1f;
     private void Start()
     {
         // Set RigidBody:
@@ -55,10 +58,21 @@ public class PlayerScript : MonoBehaviour
         updatingHealthAndEnergy();
         updatingFacingDirection();
         updatingProjectile();  
+        setisSick(false);
+        if (delay >= 0)
+        {
+            delay -= Time.deltaTime;
+        }
+        else
+        {
+            fillFireRate(100);
+            delay = .1f;
+        }
     }
     private void FixedUpdate()
     {
-        rb.velocity = movementDirection * currentMovementSpeed;
+        if(!isSick)
+            rb.velocity = movementDirection * currentMovementSpeed;
     }
 
     // Updating Movement Speed: 
@@ -78,7 +92,7 @@ public class PlayerScript : MonoBehaviour
                 currentMovementSpeed = walkingSpeed;
             currentEnergy -= 50*Time.deltaTime;
         }
-        else
+        else if (!isSick)
         {
             currentMovementSpeed = walkingSpeed;
             currentEnergy += 10*Time.deltaTime;
@@ -114,7 +128,7 @@ public class PlayerScript : MonoBehaviour
         }
         
     }
-    public void setHealth(float damageTaken){currentHealth -= damageTaken;}
+    public void setHealth(float damageTaken){currentHealth -= damageTaken; currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth); updatingHealthAndEnergy();} 
     private void updatingHealthAndEnergy()
     {
         if(healthBar != null && energyBar != null)
@@ -131,6 +145,7 @@ public class PlayerScript : MonoBehaviour
     {
         if(Input.GetButtonDown("Fire1"))
         {
+            fillFireRate(0);
             GameObject instantiatedObject = Instantiate(projPrefab, launchOffset.position, transform.rotation);
             instantiatedObject.GetComponent<ProjectileBehaviour>().setIsPlayer();
         }
@@ -146,4 +161,25 @@ public class PlayerScript : MonoBehaviour
     }
     public int getSpellSelected(){return spellSelected;}
     public void SetSpellSelected(int newValue){spellSelected = newValue; tempPowerUp -= Time.deltaTime;}
+    public void setisSick(bool temp)
+    {
+        if(temp)
+        {
+            isSick = true;
+            rb.velocity = movementDirection * walkingSpeed;
+            currentEnergy = Mathf.Clamp(currentEnergy - Time.deltaTime*10, 0, 50);
+        }
+        else
+        {
+            isSick = temp;
+        }
+    }
+    private void fillFireRate(float f)
+    {
+        GameObject fireGO = GameObject.FindGameObjectWithTag("FireRate");
+        if(fireGO != null)
+        {
+            fireGO.GetComponent<Image>().fillAmount = f;
+        }
+    }
 }

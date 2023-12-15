@@ -6,13 +6,20 @@ public class PowerUpBehaviour : MonoBehaviour
 {
     void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log("Object is colliding with: " + other.gameObject.name);
-        if(other.gameObject.name == "Player") 
+        GameObject target = GameObject.FindWithTag("Player");
+        string nameOfObj = this.gameObject.name;
+        if (target.name == other.gameObject.name)
         {
-            GameObject target = other.gameObject;
-            if(target != null)
+            if(nameOfObj != "PowerUpV2")
+            {
                 target.GetComponent<PlayerScript>().SetSpellSelected(1);
-            Destroy(gameObject);
+                Destroy(gameObject);
+            }
+            else
+            {
+                target.GetComponent<PlayerScript>().setHealth(-20);
+                Destroy(gameObject);
+            }
         }
     }
 }
